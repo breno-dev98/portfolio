@@ -67,3 +67,58 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+model Customer {
+  id        String    @id @default(uuid())
+  userId    String?   @unique
+  fullName  String
+  email     String    @unique
+  document  String    @unique
+  whatsapp  String
+  address   String?
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  @@map("customer")
+}
+
+model Project {
+  id           String      @id @default(uuid())
+  customer     Customer    @relation(fields: [customerId], references: [id])
+  customerId   String
+  title        String
+  description  String?
+  status       String      @default("briefing")
+  totalValue   Float       @default(0)
+  progress     Int         @default(0)
+  previewUrl   String?
+  deliveryDate DateTime?
+  documents    Document[]
+  checklists   Checklist[]
+  updatedAt    DateTime    @updatedAt
+  createdAt    DateTime    @default(now())
+  @@map("project")
+}
+
+model Document {
+  id          String    @id @default(uuid())
+  project     Project   @relation(fields: [projectId], references: [id])
+  projectId   String
+  type        String
+  contentJson Json
+  fileUrl     String?
+  signedAt    DateTime?
+  signatureIp String?
+  createdAt   DateTime  @default(now())
+  @@map("document")
+}
+
+model Checklist {
+  id          String   @id @default(uuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  description String
+  isCompleted Boolean  @default(false)
+  fileUrl     String?
+  createdAt   DateTime @default(now())
+  @@map("checklist")
+}
