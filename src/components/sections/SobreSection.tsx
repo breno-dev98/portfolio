@@ -5,12 +5,12 @@ import { Code, Server, MonitorSmartphone, Users, MapPin, Calendar } from "lucide
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
-export default function SobreClient() {
+export default function SobreSection() {
   return (
-    <main className="container max-w-5xl mx-auto px-6 md:px-8 space-y-16">
+    <section id="sobre" className="container max-w-5xl mx-auto px-6 md:px-8 space-y-16">
       <h1 className="text-3xl md:text-4xl font-bold mb-6 text-primary">Sobre Mim</h1>
 
-      <section className="grid grid-cols 1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols 1 md:grid-cols-3 gap-6">
         {/* Card Profile */}
         <Card className="mx-auto w-full text-center bg-background">
           <Image
@@ -62,10 +62,10 @@ export default function SobreClient() {
             </CardDescription>
           </CardContent>
         </Card>
-      </section>
+      </div>
 
       {/* Stacks */}
-      <section>
+      <div>
         <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary">Minhas Tecnologias</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
@@ -90,10 +90,10 @@ export default function SobreClient() {
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
       {/* Linha do tempo */}
-      <section>
+      <div>
         <h2 className="text-2xl md:text-3xl font-bold mb-6 text-primary">Minha Trajetória</h2>
         <ol className="relative border-s border-gray-300 dark:border-gray-600 space-y-10">
           {[
@@ -122,21 +122,21 @@ export default function SobreClient() {
             </li>
           ))}
         </ol>
-      </section>
+      </div>
 
       {/* CTA Final */}
-      <section className="text-center mt-10 mb-10">
+      <div className="text-center mt-10 mb-10">
         <h2 className="text-xl md:text-2xl font-semibold mb-2 text-primary">Vamos trabalhar juntos?</h2>
         <p className="text-gray-700 dark:text-gray-300 mb-4 text-base md:text-lg">
           Estou sempre aberto a novas conexões, freelas e projetos incríveis. Se você busca alguém comprometido e técnico no seu time, me chame!
         </p>
         <a
-          href="/contato"
+          href="#contato"
           className="inline-block px-6 py-3 bg-primary text-white font-semibold rounded-md shadow hover:shadow-lg transition text-sm md:text-base"
         >
           Entrar em contato
         </a>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }

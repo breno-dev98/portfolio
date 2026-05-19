@@ -12,23 +12,65 @@ export default function Header() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
+  // 🚀 Novo estado para controlar qual âncora (#) está ativa na tela
+  const [activeHash, setActiveHash] = useState("#hero");
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // 🚀 Mágica do IntersectionObserver para monitorar a rolagem da página
+  useEffect(() => {
+    if (pathname !== "/") return; // Só roda o monitor na Home
+
+    const sections = ["hero", "sobre", "projetos", "contato"];
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -60% 0px", // Dispara quando a seção ocupa a área central da tela
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveHash(`#${entry.target.id}`);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Começa a observar cada section da sua página
+    sections.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [pathname]);
+
   if (!mounted) return null;
 
   const navLinks = [
-    { name: "Home", href: "/", icon: <Home size={24} /> },
-    { name: "Sobre", href: "/sobre", icon: <Info size={24} /> },
-    { name: "Projetos", href: "/projetos", icon: <Box size={24} /> },
-    { name: "Contato", href: "/contato", icon: <Phone size={24} /> },
+    { name: "Home", href: "#hero", icon: <Home size={24} /> },
+    { name: "Sobre", href: "#sobre", icon: <Info size={24} /> },
+    { name: "Projetos", href: "#projetos", icon: <Box size={24} /> },
+    { name: "Contato", href: "#contato", icon: <Phone size={24} /> },
   ];
 
+  // 🚀 Mudamos a validação: se for a Home, checa o activeHash. Se for outra página, cai no pathname.
+  const isLinkActive = (href: string) => {
+    if (href.startsWith("#")) {
+      return activeHash === href;
+    }
+    return pathname === href;
+  };
+
   const linkClass = (href: string) =>
-    pathname === href
-      ? "text-primary font-bold dark:text-sidebar-ring"
-      : "text-gray-700 font-semibold dark:text-muted-forenground hover:text-primary transition";
+    isLinkActive(href)
+      ? "text-green-500 font-bold dark:text-green-400"
+      : "text-gray-700 font-semibold dark:text-muted-foreground hover:text-primary transition";
 
   return (
     <>
@@ -53,9 +95,7 @@ export default function Header() {
           <nav className="flex space-x-6">
             {navLinks.map((link) => (
               <Link href={link.href} className={`bg-background py-1.5 px-2 rounded-md hover:bg-muted ${linkClass(link.href)}`} key={link.href}>
-                <div>
-                  {link.name}
-                </div>
+                <div>{link.name}</div>
               </Link>
             ))}
           </nav>
@@ -107,7 +147,7 @@ export default function Header() {
             key={link.href}
             href={link.href}
             className={`flex flex-col items-center text-xs ${
-              pathname === link.href ? "text-primary font-semibold dark:text-primary-forenground" : "text-muted-foreground dark:text-muted-foreground"
+              isLinkActive(link.href) ? "text-green-500 font-semibold dark:text-green-400" : "text-muted-foreground dark:text-muted-foreground"
             }`}
           >
             {link.icon}

@@ -10,7 +10,7 @@ import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader,
 import { Badge } from "@/components/ui/badge";
 import CardAnimado from "@/components/animations/CardAnimado";
 
-export default function ProjetosClient() {
+export default function ProjetosSection() {
   const [filterSelected, setFilterSelected] = useState("Todos");
 
   const filtros = ["Todos", "Full Stack", "Frontend", "Web App", "Mobile"];
@@ -49,17 +49,17 @@ export default function ProjetosClient() {
   const projetosFiltrados = filterSelected === "Todos" ? projetos : projetos.filter((p) => p.type === filterSelected);
 
   return (
-    <main className="container mx-auto space-y-10 px-4 pt-5">
+    <section id="projetos" className="container mx-auto space-y-10 px-4 pt-5">
       {/* Hero Section */}
-      <header className="text-center space-y-4 max-w-xl mx-auto">
+      <div className="text-center space-y-4 max-w-xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold text-primary dark:text-primary-foreground">Meus Projetos</h1>
         <p className="text-lg md:text-xl text-muted-foreground dark:text-gray-300">
           Uma seleção dos meus trabalhos mais recentes e projetos que demonstram minhas habilidades
         </p>
-      </header>
+      </div>
 
       {/* Filter Section */}
-      <section aria-label="Filtros de projeto">
+      <div aria-label="Filtros de projeto">
         <div className="flex flex-wrap justify-center gap-2">
           {filtros.map((tipo) => (
             <Button
@@ -75,10 +75,10 @@ export default function ProjetosClient() {
             </Button>
           ))}
         </div>
-      </section>
+      </div>
 
       {/* Cards Section */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {projetosFiltrados.map((projeto, index) => (
           <CardAnimado key={index} delay={index * 0.1}>
             <Card className="w-full overflow-hidden pt-0 rounded-md bg-background animate-in fade-in zoom-in duration-700">
@@ -100,10 +100,10 @@ export default function ProjetosClient() {
             </Card>
           </CardAnimado>
         ))}
-      </section>
+      </div>
 
       {/* Chamada final */}
-      <section className="w-full flex">
+      <div className="w-full flex">
         <Card className="mx-auto w-full max-w-2xl py-10 text-center border dark:border-primary-foreground">
           <CardHeader>
             <CardTitle className="text-xl md:text-2xl">Gostou do que viu?</CardTitle>
@@ -115,13 +115,13 @@ export default function ProjetosClient() {
           </CardContent>
           <CardFooter>
             <CardAction className="mx-auto">
-              <Link href="/contato" className="bg-primary py-2 px-4 rounded-md text-white text-sm md:text-md hover:bg-primary/90 transition">
+              <Link href="#contato" className="bg-primary py-2 px-4 rounded-md text-white text-sm md:text-md hover:bg-primary/90 transition">
                 Vamos Conversar
               </Link>
             </CardAction>
           </CardFooter>
         </Card>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }
