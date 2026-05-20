@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "next-themes";
 
@@ -18,7 +17,6 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Header />
           <main className="pb-16 pt-8">{children}</main>
           <Toaster />
         </ThemeProvider>

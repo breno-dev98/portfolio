@@ -17,13 +17,11 @@ export default function HeroSection() {
         </h1>
         <h3 className="text-xl sm:text-2xl text-muted-foreground">Construindo experiências web rápidas e modernas.</h3>
         <div className="flex flex-col mt-6 space-y-3 max-w-[60%] mx-auto">
-            <Button asChild className="text-md sm:text-lg md:text-xl cursor-pointer" variant="default">
-          <Link href="#projetos">
-              Ver Projetos
-          </Link>
-            </Button>
           <Button asChild className="text-md sm:text-lg md:text-xl cursor-pointer" variant="default">
-            <Link href="#contato">Entrar em Contato</Link>
+            <Link href="#projetos">Ver Projetos</Link>
+          </Button>
+          <Button asChild className="text-md sm:text-lg md:text-xl cursor-pointer" variant="default">
+            <Link href="/signup">Iniciar Meu Projeto</Link>
           </Button>
         </div>
       </div>

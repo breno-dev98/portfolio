@@ -3,6 +3,7 @@ import HeroSection from "../components/sections/HeroSection";
 import SobreSection from "../components/sections/SobreSection";
 import ProjetosSection from "@/components/sections/ProjetosSection";
 import ContatoSection from "../features/contato/ContatoSection";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "Início - Breno Dev",
@@ -11,11 +12,14 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <main className="flex flex-col min-h-screen">
-      <HeroSection />
-      <SobreSection />
-      <ProjetosSection />
-      <ContatoSection />
-    </main>
+    <>
+      <Header />
+      <main className="flex flex-col min-h-screen">
+        <HeroSection />
+        <SobreSection />
+        <ProjetosSection />
+        <ContatoSection />
+      </main>
+    </>
   );
 }
