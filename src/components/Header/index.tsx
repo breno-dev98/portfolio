@@ -12,22 +12,20 @@ export default function Header() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // 🚀 Novo estado para controlar qual âncora (#) está ativa na tela
   const [activeHash, setActiveHash] = useState("#hero");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 🚀 Mágica do IntersectionObserver para monitorar a rolagem da página
   useEffect(() => {
-    if (pathname !== "/") return; // Só roda o monitor na Home
+    if (pathname !== "/") return;
 
     const sections = ["hero", "sobre", "projetos", "contato"];
 
     const observerOptions = {
       root: null,
-      rootMargin: "-20% 0px -60% 0px", // Dispara quando a seção ocupa a área central da tela
+      rootMargin: "-20% 0px -60% 0px",
       threshold: 0,
     };
 
@@ -41,7 +39,6 @@ export default function Header() {
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-    // Começa a observar cada section da sua página
     sections.forEach((id) => {
       const element = document.getElementById(id);
       if (element) observer.observe(element);
@@ -59,7 +56,6 @@ export default function Header() {
     { name: "Contato", href: "#contato", icon: <Phone size={24} /> },
   ];
 
-  // 🚀 Mudamos a validação: se for a Home, checa o activeHash. Se for outra página, cai no pathname.
   const isLinkActive = (href: string) => {
     if (href.startsWith("#")) {
       return activeHash === href;

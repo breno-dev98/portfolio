@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <main className="pb-16 pt-8">{children}</main>
+          <main>{children}</main>
           <Toaster />
         </ThemeProvider>
       </body>

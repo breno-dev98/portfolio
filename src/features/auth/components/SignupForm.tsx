@@ -34,12 +34,11 @@ export function SignUpForm() {
 
   async function onSubmit(data: SignUpFormValues) {
     try {
-      // Chamada nativa do Better Auth para criar usuário com e-mail e senha
       const { data: signUpData, error } = await authClient.signUp.email({
         email: data.email,
         password: data.senha,
         name: data.nome,
-        callbackURL: "/painel/orcamento",
+        callbackURL: "/onboarding",
       });
 
       if (error) {
@@ -53,7 +52,7 @@ export function SignUpForm() {
         description: "Redirecionando você para o painel de orçamentos...",
       });
 
-      router.push("/painel/orcamento");
+      router.push("/onboarding");
     } catch (err) {
       toast.error("Erro crítico", {
         description: "Falha ao conectar com o serviço de autenticação.",

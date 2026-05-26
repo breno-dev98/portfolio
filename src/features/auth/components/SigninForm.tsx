@@ -35,7 +35,7 @@ export function SignInForm() {
       const { data: signInData, error } = await authClient.signIn.email({
         email: data.email,
         password: data.senha,
-        callbackURL: "/painel/orcamento",
+        callbackURL: "/onboarding",
       });
 
       if (error) {
@@ -57,7 +57,7 @@ export function SignInForm() {
         description: "Redirecionando você para o painel de orçamentos...",
       });
 
-      router.push("/painel/orcamento");
+      router.push("/onboarding");
     } catch (err) {
       toast.error("Erro crítico", {
         description: "Falha ao conectar com o serviço de autenticação.",
