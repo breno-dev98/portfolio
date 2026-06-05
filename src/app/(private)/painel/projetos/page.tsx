@@ -1,10 +1,10 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getProjetosByUsuario } from "@/features/projetos/queries";
-import { ListaProjetos } from "@/features/projetos/components/ListaProjetos";
+import { getProjectsByUserId } from "@/features/projetos/queries";
+import { ProjectList } from "@/features/projetos/components/ProjectList";
 
-export default async function ProjetosPage() {
+export default async function ProjectsPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -13,7 +13,7 @@ export default async function ProjetosPage() {
     redirect("/login");
   }
 
-  const projetos = await getProjetosByUsuario(session.user.id);
+  const projects = await getProjectsByUserId(session.user.id);
 
   return (
     <div className="p-6 space-y-6">
@@ -22,7 +22,7 @@ export default async function ProjetosPage() {
         <p className="text-muted-foreground">Gerencie seus briefings e acompanhe o andamento.</p>
       </div>
 
-      <ListaProjetos dados={projetos} />
+      <ProjectList projects={projects} />
     </div>
   );
 }

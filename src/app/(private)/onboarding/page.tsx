@@ -1,9 +1,8 @@
 import React from "react";
 import { OnboardingWizard } from "@/features/onboarding/OnboardingWizard";
-import { ToggleTheme } from "@/components/shared/ToggleTheme";
 import { getSession } from "@/features/auth/actions";
 import { redirect } from "next/navigation";
-import { getProjetosByUsuario } from "@/features/projetos/queries";
+import { getProjectsByUserId } from "@/features/projetos/queries";
 
 export default async function OnboardingPage() {
   const session = await getSession();
@@ -12,16 +11,15 @@ export default async function OnboardingPage() {
     redirect("/signin");
   }
 
-  const projetoExistente = await getProjetosByUsuario(session.user.id);
+  const projetoExistente = await getProjectsByUserId(session.user.id);
 
-  if (projetoExistente) {
+  if (projetoExistente && projetoExistente.length > 0) {
     redirect("/painel/projetos");
   }
   return (
-    <main className="w-full min-h-screen flex flex-col justify-center items-center gap-4 flex-1">
-      <div className="w-full max-w-3xl flex justify-between sm:text-left shrink-0">
+    <main className="w-full min-h-screen flex flex-col justify-center items-center gap-4 flex-1 px-1.5 md:p-0">
+      <div className="w-full max-w-3xl shrink-0">
         <h1 className="text-xl font-semibold tracking-tight text-muted-foreground">Painel do Cliente</h1>
-        <ToggleTheme />
       </div>
 
       <OnboardingWizard />

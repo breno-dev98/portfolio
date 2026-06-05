@@ -76,7 +76,7 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>E-mail Corporativo/Pessoal:*</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="seuemail@provedor.com" className="focus-visible:ring-zinc-300" required {...field} />
+                <Input type="email" placeholder="seuemail@provedor.com" className="focus-visible:ring-primary" required {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,7 +90,7 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>Crie uma Senha:*</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="No mínimo 6 caracteres" className="focus-visible:ring-zinc-300" required {...field} />
+                <Input type="password" placeholder="No mínimo 6 caracteres" className="focus-visible:ring-primary" required {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,7 +102,7 @@ export function SignInForm() {
           disabled={isSubmitting}
           className="mt-2 w-full bg-primary text-white rounded-md py-2 hover:bg-ring transition cursor-pointer disabled:opacity-50"
         >
-          {isSubmitting ? "Fazendo login..." : "Fazer Login & Acessar Painel"}
+          {isSubmitting ? "Entrando..." : "Entrar"}
         </Button>
       </form>
     </Form>

@@ -16,7 +16,7 @@ export default function ContatoSection() {
       </div>
 
       {/* Grid Principal Inferior */}
-      <div className="p-6 sm:p-8 md:p-12 mx-auto flex flex-col md:flex-row-reverse gap-10 -mt-16 sm:-mt-30 md:-mt-35 lg:-mt-40 bg-white dark:bg-card shadow-2xl z-10 rounded-xl w-[95%] md:w-[100vh] h-fit relative">
+      <div className="p-6 sm:p-8 md:p-12 mx-auto flex flex-col md:flex-row-reverse gap-10 -mt-16 sm:-mt-30 md:-mt-35 lg:-mt-40 bg-background dark:bg-background shadow-2xl z-10 rounded-xl w-[95%] md:w-[100vh] h-fit relative">
         {/* Lado Direito/Principal: Formulário envelopado no container correto */}
         <div className="rounded-xl border dark:border-border p-6 sm:p-8 w-full md:flex-1">
           <ContatoForm />

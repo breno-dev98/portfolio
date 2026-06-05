@@ -70,7 +70,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Seu Nome ou Empresa:*</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="Ex: João Silva ou Empresa X" className="focus-visible:ring-zinc-300" required {...field} />
+                <Input type="text" placeholder="Ex: João Silva ou Empresa X" className="focus-visible:ring-primary" required {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -84,7 +84,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>E-mail Corporativo/Pessoal:*</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="seuemail@provedor.com" className="focus-visible:ring-zinc-300" required {...field} />
+                <Input type="email" placeholder="seuemail@provedor.com" className="focus-visible:ring-primary" required {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -98,7 +98,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Crie uma Senha:*</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="No mínimo 6 caracteres" className="focus-visible:ring-zinc-300" required {...field} />
+                <Input type="password" placeholder="No mínimo 6 caracteres" className="focus-visible:ring-primary" required {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -110,7 +110,7 @@ export function SignUpForm() {
           disabled={isSubmitting}
           className="mt-2 w-full bg-primary text-white rounded-md py-2 hover:bg-ring transition cursor-pointer disabled:opacity-50"
         >
-          {isSubmitting ? "Criando sua conta..." : "Criar Conta & Acessar Painel"}
+          {isSubmitting ? "Criando sua conta..." : "Criar Conta"}
         </Button>
       </form>
     </Form>

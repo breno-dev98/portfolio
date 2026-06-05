@@ -13,90 +13,59 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { criarOnboardingAction } from "./actions";
+import { useWizard, WizardProvider } from "./context/WizardContext";
 
-export interface OrcamentoData {
-  tipoProjeto: string;
-  tituloProjeto: string;
-  funcionalidades: string[];
-  documento: string;
-  whatsapp: string;
-  cep: string;
-  logradouro: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  uf: string;
-  endereco: string;
-  prazoEstimado: string;
-  orcamentoEstimado: string;
-  descricao: string;
-}
-
-export function OnboardingWizard() {
+function OnboardingWizardContent() {
   const router = useRouter();
-  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-
-  const [formData, setFormData] = useState<OrcamentoData>({
-    tipoProjeto: "",
-    tituloProjeto: "",
-    funcionalidades: [],
-    prazoEstimado: "",
-    orcamentoEstimado: "",
-    descricao: "",
-    endereco: "",
-    documento: "",
-    whatsapp: "",
-    cep: "",
-    logradouro: "",
-    numero: "",
-    bairro: "",
-    cidade: "",
-    uf: "",
-  });
-
+  const { step, setStep, data, update } = useWizard();
   const totalSteps = 6;
 
-  const updateFormData = (fields: Partial<OrcamentoData>) => {
-    setFormData((prev) => ({ ...prev, ...fields }));
+  const isStepInvalid = () => {
+    switch (step) {
+      case 1:
+        return !data.project.projectType || !data.project.title?.trim();
+      case 2:
+        return data.project.features.length === 0;
+      case 3:
+        return (
+          !data.customer.whatsapp?.trim() ||
+          !data.customer.document?.trim() ||
+          !data.address.cep?.trim() ||
+          !data.address.street?.trim() ||
+          !data.address.neighborhood?.trim() ||
+          !data.address.number?.trim() ||
+          !data.address.city?.trim() ||
+          !data.address.state?.trim()
+        );
+      case 4:
+        return !data.project.description?.trim() || !data.project.details?.trim();
+      case 5:
+        return !data.project.deliveryEstimate || !data.project.budgetEstimate;
+      default:
+        return false;
+    }
   };
 
   const handleNext = () => {
-    if (step === 1) {
-      if (!formData.tipoProjeto) {
-        toast.warning("Por favor, selecione o tipo do seu projeto.");
-        return;
-      }
-      if (!formData.tituloProjeto.trim()) {
-        toast.warning("Por favor, insira um título para o seu projeto.");
-        return;
-      }
-    }
+    if (isStepInvalid()) return;
 
     if (step === 3) {
-      if (!formData.whatsapp || !formData.documento || !formData.cep || !formData.numero) {
-        toast.warning("Por favor, preencha todos os campos obrigatórios de contato e endereço.");
-        return;
-      }
-      const enderecoCompleto = `${formData.logradouro}, ${formData.numero} - ${formData.bairro}, ${formData.cidade}/${formData.uf}`;
-      updateFormData({ endereco: enderecoCompleto });
+      const enderecoCompleto = `${data.address.street}, ${data.address.number} - ${data.address.neighborhood}, ${data.address.city}/${data.address.state}`;
+      update({ address: { ...data.address, fullAddress: enderecoCompleto } });
     }
 
-    if (step === 5 && (!formData.prazoEstimado || !formData.orcamentoEstimado)) {
-      toast.warning("Por favor, preencha o prazo e a estimativa de orçamento.");
-      return;
-    }
-    setStep((prev) => Math.min(prev + 1, totalSteps));
+    setStep(Math.min(step + 1, totalSteps));
   };
 
   const handleBack = () => {
-    setStep((prev) => Math.max(prev - 1, 1));
+    setStep(Math.max(step - 1, 1));
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const result = await criarOnboardingAction(formData);
+      const result = await criarOnboardingAction(data);
 
       if (!result.success) {
         throw new Error(result.error);
@@ -127,7 +96,7 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white dark:bg-card p-6 sm:p-8 rounded-xl shadow-lg border border-border flex flex-col justify-between h-auto max-h-[calc(100vh-5rem)] sm:max-h-none sm:min-h-[580px]">
+    <div className="w-full max-w-3xl mx-auto bg-background p-6 sm:p-8 rounded-xl shadow-lg border border-border flex flex-col justify-between h-auto max-h-[calc(100vh-5rem)] sm:max-h-[90dvh] ">
       {/* Topo com Barra de Progresso */}
       <div className="flex flex-col flex-1 min-h-0">
         <StepProgresso currentStep={step} totalSteps={totalSteps} />
@@ -137,13 +106,13 @@ export function OnboardingWizard() {
           <p className="text-xs sm:text-sm text-muted-foreground px-4">{textosPassos[step as keyof typeof textosPassos].sub}</p>
         </div>
         {/* Renderização Condicional dos Passos */}
-        <div className="flex-1 min-h-0 overflow-y-auto pr-1 flex flex-col justify-start py-3 subtle-scrollbar">
-          {step === 1 && <Step1Objetivo data={formData} updateData={updateFormData} />}
-          {step === 2 && <Step2Funcionalidades data={formData} updateData={updateFormData} />}
-          {step === 3 && <Step3DadosContato data={formData} updateData={updateFormData} />}
-          {step === 4 && <Step4Detalhes data={formData} updateData={updateFormData} />}
-          {step === 5 && <Step5Prazos data={formData} updateData={updateFormData} />}
-          {step === 6 && <Step6Resumo data={formData} />}
+        <div className="flex-1 sm:min-h-[52dvh] sm:max-h-[52dvh] [scrollbar-gutter:stable] overflow-y-auto pr-1 flex flex-col justify-start py-2 subtle-scrollbar">
+          {step === 1 && <Step1Objetivo />}
+          {step === 2 && <Step2Funcionalidades />}
+          {step === 3 && <Step3DadosContato />}
+          {step === 4 && <Step4Detalhes />}
+          {step === 5 && <Step5Prazos />}
+          {step === 6 && <Step6Resumo />}
         </div>
       </div>
 
@@ -154,7 +123,7 @@ export function OnboardingWizard() {
         </Button>
 
         {step < totalSteps ? (
-          <Button onClick={handleNext} className="flex items-center gap-2 cursor-pointer bg-primary text-white">
+          <Button onClick={handleNext} disabled={isStepInvalid() || loading} className="flex items-center gap-2 cursor-pointer bg-primary text-white">
             Avançar <ArrowRight size={16} />
           </Button>
         ) : (
@@ -164,5 +133,13 @@ export function OnboardingWizard() {
         )}
       </div>
     </div>
+  );
+}
+
+export function OnboardingWizard() {
+  return (
+    <WizardProvider>
+      <OnboardingWizardContent />
+    </WizardProvider>
   );
 }

@@ -3,14 +3,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { OrcamentoData } from "../OnboardingWizard";
 import { Layout, ShoppingBag, Laptop, Code, CheckSquare, Calendar, FileText, User } from "lucide-react";
+import { useWizard } from "../context/WizardContext";
 
-interface StepProps {
-  data: OrcamentoData;
-}
-
-export function Step6Resumo({ data }: StepProps) {
+export function Step6Resumo() {
+  const { data } = useWizard();
   const mapeamentoTipos: Record<string, { label: string; icon: React.ReactNode }> = {
     landing: { label: "Landing Page", icon: <Layout size={16} /> },
     institucional: { label: "Site Inst.", icon: <Laptop size={16} /> }, 
@@ -41,7 +38,7 @@ export function Step6Resumo({ data }: StepProps) {
     acima15k: "Acima R$ 15k",
   };
 
-  const projetoSelecionado = mapeamentoTipos[data.tipoProjeto] || { label: "Não definido", icon: <Code size={16} /> };
+  const projetoSelecionado = mapeamentoTipos[data.project.projectType!] || { label: "Não definido", icon: <Code size={16} /> };
 
   return (
     <div className="space-y-4 w-full text-left">
@@ -55,7 +52,7 @@ export function Step6Resumo({ data }: StepProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <p className="text-xs sm:text-sm font-bold text-foreground truncate">{data.tituloProjeto || "Sem nome"}</p>
+            <p className="text-xs sm:text-sm font-bold text-foreground truncate">{data.project.title || "Sem nome"}</p>
             <span className="text-[10px] sm:text-xs text-muted-foreground block mt-0.5 font-medium">{projetoSelecionado.label}</span>
           </CardContent>
         </Card>
@@ -71,11 +68,11 @@ export function Step6Resumo({ data }: StepProps) {
           <CardContent className="p-0 space-y-0.5 text-[11px] sm:text-xs">
             <div className="flex justify-between items-center gap-1">
               <span className="text-muted-foreground">Prazo:</span>
-              <span className="font-medium text-foreground truncate">{mapeamentoPrazos[data.prazoEstimado] || "—"}</span>
+              <span className="font-medium text-foreground truncate">{mapeamentoPrazos[data.project.deliveryEstimate] || "—"}</span>
             </div>
             <div className="flex justify-between items-center gap-1">
               <span className="text-muted-foreground">Verba:</span>
-              <span className="font-semibold text-green-600 dark:text-green-400 truncate">{mapeamentoValores[data.orcamentoEstimado] || "—"}</span>
+              <span className="font-semibold text-green-600 dark:text-green-400 truncate">{mapeamentoValores[data.project.budgetEstimate] || "—"}</span>
             </div>
           </CardContent>
         </Card>
@@ -96,19 +93,17 @@ export function Step6Resumo({ data }: StepProps) {
             <div className="grid grid-cols-2 gap-4 border-b border-border/40 pb-1">
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">WhatsApp</span>
-                <span className="font-medium text-foreground">{data.whatsapp || "—"}</span>
+                <span className="font-medium text-foreground">{data.customer.whatsapp || "—"}</span>
               </div>
               <div>
                 <span className="text-muted-foreground block text-[10px] uppercase font-medium">Doc. (CPF/CNPJ)</span>
-                <span className="font-medium text-foreground">{data.documento || "—"}</span>
+                <span className="font-medium text-foreground">{data.customer.document || "—"}</span>
               </div>
             </div>
             <div>
               <span className="text-muted-foreground block text-[10px] uppercase font-medium">Endereço de Faturamento</span>
               <p className="text-foreground leading-normal mt-0.5 font-medium">
-                {data.logradouro
-                  ? `${data.logradouro}, ${data.numero} — ${data.bairro}, ${data.cidade}/${data.uf} (CEP: ${data.cep})`
-                  : data.endereco || "—"}
+                {data.address.street ? `${data.address.street}, ${data.address.number} — ${data.address.neighborhood}, ${data.address.city}/${data.address.state} (CEP: ${data.address.cep})` : "—"}
               </p>
             </div>
           </CardContent>
@@ -123,9 +118,9 @@ export function Step6Resumo({ data }: StepProps) {
             <CardTitle className="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Recursos Escolhidos</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            {data.funcionalidades.length > 0 ? (
+            {data.project.features.length > 0 ? (
               <div className="flex flex-wrap gap-1.5">
-                {data.funcionalidades.map((funcId) => (
+                {data.project.features.map((funcId) => (
                   <Badge key={funcId} variant="secondary" className="px-2 py-0.5 font-normal text-[10px] sm:text-xs rounded-md">
                     {mapeamentoFuncionalidades[funcId] || funcId}
                   </Badge>
@@ -148,9 +143,15 @@ export function Step6Resumo({ data }: StepProps) {
             Detalhes e Referências
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 space-y-1.5">
           <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-foreground bg-background p-2.5 rounded-md border border-border/50 max-h-[100px] overflow-y-auto subtle-scrollbar">
-            {data.descricao.trim() || "Nenhuma descrição adicional informada."}
+            {data.project.description?.trim() || "Nenhuma descrição adicional informada."}
+          </p>
+          <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-foreground bg-background p-2.5 rounded-md border border-border/50 max-h-[100px] overflow-y-auto subtle-scrollbar">
+            {data.project.details?.trim() || "Nenhuma observação extra informada."}
+          </p>
+          <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-foreground bg-background p-2.5 rounded-md border border-border/50 max-h-[100px] overflow-y-auto subtle-scrollbar">
+            {data.project.references?.trim() || "Nenhuma referência informada."}
           </p>
         </CardContent>
       </Card>

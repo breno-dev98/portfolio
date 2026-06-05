@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, LogOut, Moon, Sun } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
-import { useTheme } from "next-themes";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
@@ -28,12 +27,6 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
-
-  const { setTheme, resolvedTheme } = useTheme();
-
-  const handleThemeChange = () => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  };
 
  const handleLogout = async () => {
     try {
@@ -94,22 +87,6 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={handleThemeChange}>
-                {resolvedTheme === "dark" ? (
-                  <>
-                    <Sun className="text-yellow-500 fill-amber-300" />
-                    <p>Modo claro</p>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="text-gray-500 fill-gray-500" />
-                    <p>Modo escuro</p>
-                  </>
-                )}
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="text-red-500" />

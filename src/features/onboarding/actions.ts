@@ -1,10 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { OrcamentoData } from "./OnboardingWizard";
 import { getSession } from "../auth/actions";
+import { WizardData } from "./context/WizardContext";
 
-export async function criarOnboardingAction(formData: OrcamentoData) {
+export async function criarOnboardingAction(formData: WizardData) {
   try {
     const session = await getSession();
 
@@ -16,29 +16,41 @@ export async function criarOnboardingAction(formData: OrcamentoData) {
       landing: "Landing Page",
       institucional: "Site Institucional",
       ecommerce: "E-commerce",
-      custom: "Sistema Web",
+      sistema: "Sistema Web",
     };
-    const nomeProjetoFinal = formData.tituloProjeto.trim() || mapeamentoTipos[formData.tipoProjeto] || "Novo Projeto";
+
+    const nomeProjetoFinal = formData.project.title.trim() || mapeamentoTipos[formData.project.projectType || ""] || "Novo Projeto";
 
     await prisma.customer.create({
       data: {
         userId: session.user.id,
-        fullName: session.user.name,
-        email: session.user.email,
-        document: formData.documento,
-        whatsapp: formData.whatsapp,
-        address: formData.endereco,
+        fullName: formData.customer.fullName.trim(),
+        email: formData.customer.email.trim(),
+        document: formData.customer.document.replace(/\D/g, ""),
+        whatsapp: formData.customer.whatsapp.replace(/\D/g, ""),
+        address: {
+          create: {
+            cep: formData.address.cep,
+            street: formData.address.street,
+            number: formData.address.number,
+            neighborhood: formData.address.neighborhood,
+            city: formData.address.city,
+            state: formData.address.state,
+          },
+        },
         projects: {
           create: {
             title: nomeProjetoFinal,
-            projectType: formData.tipoProjeto,
-            features: formData.funcionalidades,
-            description: formData.descricao || "Sem descrição adicional.",
+            projectType: formData.project.projectType!,
+            features: formData.project.features,
+            description: formData.project.description!.trim(),
+            details: formData.project.details!.trim(),
+            references: formData.project.references?.trim() || null,
             status: "briefing",
             progress: 0,
             totalValue: 0,
-            budgetEstimate: formData.orcamentoEstimado,
-            deliveryEstimate: formData.prazoEstimado,
+            budgetEstimate: formData.project.budgetEstimate,
+            deliveryEstimate: formData.project.deliveryEstimate,
           },
         },
       },
@@ -47,12 +59,14 @@ export async function criarOnboardingAction(formData: OrcamentoData) {
     return { success: true };
   } catch (error: any) {
     console.error("Erro na Server Action de Onboarding:", error);
+
     if (error?.code === "P2002") {
       return {
         success: false,
         error: "Este CPF ou CNPJ já está vinculado a outra conta de cliente.",
       };
     }
+
     return { success: false, error: "Falha ao salvar os dados no banco de dados." };
   }
 }

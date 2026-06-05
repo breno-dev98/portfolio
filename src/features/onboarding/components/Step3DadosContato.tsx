@@ -3,29 +3,39 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { OrcamentoData } from "../OnboardingWizard";
 import { Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { formatarDocumento, formatarWhatsapp } from "@/utils/masks";
+import { useWizard } from "../context/WizardContext";
+import { Checkbox } from "@/components/ui/checkbox";
+import { authClient } from "@/lib/auth-client";
 
-interface StepProps {
-  data: OrcamentoData;
-  updateData: (fields: Partial<OrcamentoData>) => void;
-}
-
-export function Step3DadosContato({ data, updateData }: StepProps) {
+export function Step3DadosContato() {
   const [buscandoCep, setBuscandoCep] = useState(false);
+  const { data, update } = useWizard();
+  const { data: session } = authClient.useSession();
+  const [useProfileEmail, setUseProfileEmail] = useState(false);
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setUseProfileEmail(checked);
+
+    if (checked && session?.user.email) {
+      update({ customer: {  email: session.user.email } });
+    } else if (!checked) {
+      update({ customer: {  email: "" } });
+    }
+  };
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const limpo = e.target.value.replace(/\D/g, "");
     const formatado = limpo.length > 5 ? `${limpo.slice(0, 5)}-${limpo.slice(5, 8)}` : limpo;
 
-    updateData({ cep: formatado });
+    update({ address: { cep: formatado } });
 
     if (limpo.length === 8) {
       setBuscandoCep(true);
       try {
-        const res = await fetch(`https://viacep.com.br/ws/${limpo}/json/`);
+        const res = await fetch(`https://brasilapi.com.br/api/cep/v2/${limpo}`);
         const dados = await res.json();
 
         if (dados.erro) {
@@ -34,17 +44,22 @@ export function Step3DadosContato({ data, updateData }: StepProps) {
           return;
         }
 
-        updateData({
-          logradouro: dados.logradouro || "",
-          bairro: dados.bairro || "",
-          cidade: dados.localidade || "",
-          uf: dados.uf || "",
+        update({
+          address: {
+            cep: dados.cep || formatado,
+            street: dados.street || "",
+            number: dados.number || "",
+            neighborhood: dados.neighborhood || "",
+            city: dados.city || "",
+            state: dados.state || "",
+            fullAddress: `${dados.street || ""} ${dados.number || ""}, ${dados.neighborhood || ""}, ${dados.city || ""} - ${dados.state || ""}`.trim(),
+          },
         });
 
         toast.success("Endereço localizado com sucesso!");
 
         setTimeout(() => {
-          document.getElementById("numero")?.focus();
+          document.getElementById("number")?.focus();
         }, 100);
       } catch (error) {
         toast.error("Erro ao buscar o CEP. Tente preencher manualmente.");
@@ -56,35 +71,6 @@ export function Step3DadosContato({ data, updateData }: StepProps) {
 
   return (
     <div className="space-y-4 max-w-xl mx-auto w-full text-left p-2">
-      {/* Grid de Contatos Principais */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="space-y-1">
-          <Label htmlFor="whatsapp">WhatsApp / Celular:*</Label>
-          <Input
-            id="whatsapp"
-            type="tel"
-            placeholder="(85) 99999-9999"
-            maxLength={15}
-            value={data.whatsapp}
-            onChange={(e) => updateData({ whatsapp: formatarWhatsapp(e.target.value) })}
-            className="focus-visible:ring-zinc-300 h-9 text-sm"
-          />
-        </div>
-
-        <div className="space-y-1">
-          <Label htmlFor="documento">CPF ou CNPJ:*</Label>
-          <Input
-            id="documento"
-            type="text"
-            placeholder="000.000.000-00"
-            maxLength={18}
-            value={data.documento}
-            onChange={(e) => updateData({ documento: formatarDocumento(e.target.value) })}
-            className="focus-visible:ring-zinc-300 h-9 text-sm"
-          />
-        </div>
-      </div>
-
       <div className="relative flex items-center py-1">
         <div className="flex-grow border-t border-border"></div>
         <span className="flex-shrink mx-3 text-[10px] text-muted-foreground uppercase tracking-wider font-semibold flex items-center gap-1">
@@ -94,9 +80,70 @@ export function Step3DadosContato({ data, updateData }: StepProps) {
       </div>
 
       {/* Bloco de Endereço Automatizado por CEP */}
-      <div className="space-y-3">
-        <div className="grid grid-cols-4 gap-3">
-          <div className="col-span-2 space-y-1">
+      <div className="space-y-4">
+        {/* Dados Pessoais / Contato */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="md:col-span-2 space-y-1">
+            <Label htmlFor="fullName">Nome completo / Razão social</Label>
+            <Input
+              id="fullName"
+              type="text"
+              placeholder="Seu nome completo"
+              maxLength={100}
+              value={data.customer.fullName}
+              onChange={(e) => update({ customer: {  fullName: e.target.value } })}
+              className="focus-visible:ring-zinc-300 h-9 text-sm"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="email">E-mail</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="seu.email@exemplo.com"
+              maxLength={100}
+              value={data.customer.email}
+              disabled={useProfileEmail}
+              onChange={(e) => update({ customer: {  email: e.target.value } })}
+              className="focus-visible:ring-zinc-300 h-9 text-sm"
+            />
+            <div className="flex items-center gap-2 mt-1">
+              <Checkbox id="userEmail" checked={useProfileEmail} onCheckedChange={handleCheckboxChange} />
+              <Label htmlFor="userEmail" className="text-xs text-muted-foreground cursor-pointer1">
+                Usar e-mail do cadastro
+              </Label>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="documento">CPF ou CNPJ:*</Label>
+            <Input
+              id="documento"
+              type="text"
+              placeholder="000.000.000-00"
+              maxLength={18}
+              value={data.customer.document}
+              onChange={(e) => update({ customer: {  document: formatarDocumento(e.target.value) } })}
+              className="focus-visible:ring-zinc-300 h-9 text-sm"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="whatsapp">WhatsApp / Celular:*</Label>
+            <Input
+              id="whatsapp"
+              type="tel"
+              placeholder="(85) 99999-9999"
+              maxLength={15}
+              value={data.customer.whatsapp}
+              onChange={(e) => update({ customer: {  whatsapp: formatarWhatsapp(e.target.value) } })}
+              className="focus-visible:ring-zinc-300 h-9 text-sm"
+            />
+          </div>
+
+          {/* O campo CEP fica ao lado do WhatsApp no Desktop */}
+          <div className="space-y-1">
             <Label htmlFor="cep">CEP:*</Label>
             <div className="relative">
               <Input
@@ -104,72 +151,78 @@ export function Step3DadosContato({ data, updateData }: StepProps) {
                 type="text"
                 placeholder="00000-000"
                 maxLength={9}
-                value={data.cep}
+                value={data.address.cep}
                 onChange={handleCepChange}
                 className="focus-visible:ring-zinc-300 h-9 text-sm pr-7"
               />
               {buscandoCep && <Loader2 className="absolute right-2 top-2.5 h-4 w-4 animate-spin text-muted-foreground" />}
             </div>
           </div>
-          <div className="col-span-2 space-y-1">
-            <Label htmlFor="numero">Número:*</Label>
+        </div>
+
+        {/* Bloco de Endereço Automatizado */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          {/* Endereço ocupa 3 colunas e o Número ocupa 1 no desktop */}
+          <div className="md:col-span-3 space-y-1">
+            <Label htmlFor="street">Endereço / Rua:*</Label>
             <Input
-              id="numero"
+              id="street"
+              type="text"
+              placeholder="Rua, Avenida..."
+              value={data.address.street}
+              onChange={(e) => update({ address: { street: e.target.value } })}
+              className="focus-visible:ring-zinc-300 h-9 text-sm"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="number">Número:*</Label>
+            <Input
+              id="number"
               type="text"
               placeholder="123, S/N"
-              value={data.numero}
-              onChange={(e) => updateData({ numero: e.target.value })}
+              value={data.address.number}
+              onChange={(e) => update({ address: { number: e.target.value } })}
               className="focus-visible:ring-zinc-300 h-9 text-sm"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-3">
-          <div className="col-span-4 space-y-1">
-            <Label htmlFor="logradouro">Logradouro / Rua:*</Label>
+        {/* Bairro,Cidade e UF */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          <div className="md:col-span-2 space-y-1">
+            <Label htmlFor="neighborhood">Bairro:*</Label>
             <Input
-              id="logradouro"
+              id="neighborhood"
               type="text"
-              placeholder="Rua, Avenida..."
-              value={data.logradouro}
-              onChange={(e) => updateData({ logradouro: e.target.value })}
+              placeholder="Seu bairro"
+              value={data.address.neighborhood}
+              onChange={(e) => update({ address: { neighborhood: e.target.value } })}
               className="focus-visible:ring-zinc-300 h-9 text-sm"
             />
           </div>
 
-          <div className="col-span-4 md:col-span-2 space-y-1">
-            <Label htmlFor="bairro">Bairro:*</Label>
+          <div className="md:col-span-2 space-y-1">
+            <Label htmlFor="city">Cidade:*</Label>
             <Input
-              id="bairro"
-              type="text"
-              placeholder="Ex: Centro"
-              value={data.bairro}
-              onChange={(e) => updateData({ bairro: e.target.value })}
-              className="focus-visible:ring-zinc-300 h-9 text-sm"
-            />
-          </div>
-
-          <div className="col-span-3 md:col-span-1 space-y-1">
-            <Label htmlFor="cidade">Cidade:*</Label>
-            <Input
-              id="cidade"
+              id="city"
               type="text"
               placeholder="Sua cidade"
-              value={data.cidade}
-              onChange={(e) => updateData({ cidade: e.target.value })}
+              value={data.address.city}
+              onChange={(e) => update({ address: { city: e.target.value } })}
               className="focus-visible:ring-zinc-300 h-9 text-sm"
             />
           </div>
 
-          <div className="col-span-1 space-y-1">
-            <Label htmlFor="uf">UF:*</Label>
+          <div className="space-y-1">
+            <Label htmlFor="state">UF:*</Label>
             <Input
-              id="uf"
+              id="state"
               type="text"
               placeholder="CE"
               maxLength={2}
-              value={data.uf}
-              onChange={(e) => updateData({ uf: e.target.value.toUpperCase() })}
+              value={data.address.state}
+              onChange={(e) => update({ address: { state: e.target.value.toUpperCase() } })}
               className="focus-visible:ring-zinc-300 h-9 text-sm uppercase text-center"
             />
           </div>

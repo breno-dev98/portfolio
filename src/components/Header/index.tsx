@@ -3,13 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Box, Info, Phone, Moon, Sun } from "lucide-react";
+import { Home, Box, Info, Phone } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useTheme } from "next-themes";
 
 export default function Header() {
   const pathname = usePathname();
-  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   const [activeHash, setActiveHash] = useState("#hero");
@@ -65,13 +63,13 @@ export default function Header() {
 
   const linkClass = (href: string) =>
     isLinkActive(href)
-      ? "text-green-500 font-bold dark:text-green-400"
+      ? "text-primary font-bold dark:text-primary"
       : "text-gray-700 font-semibold dark:text-muted-foreground hover:text-primary transition";
 
   return (
     <>
       {/* Header desktop */}
-      <header className="bg-white shadow-md fixed top-0 left-0 w-full z-50 hidden md:flex px-4 py-4 dark:bg-background">
+      <header className="bg-background shadow-md fixed top-0 left-0 w-full z-50 hidden md:flex px-4 py-4 dark:bg-background">
         <div className="relative w-full max-w-7xl mx-auto flex items-center justify-center">
           {/* Logo fixada à esquerda */}
           <div className="absolute left-0 flex items-center gap-3">
@@ -80,7 +78,7 @@ export default function Header() {
               <AvatarFallback>BO</AvatarFallback>
             </Avatar>
             <div>
-              <Link href="/" className="text-xl font-bold text-black dark:text-white">
+              <Link href="/" className="text-xl font-bold text-primary dark:text-white">
                 Breno Oliveira
               </Link>
               <p className="text-xs text-normal text-muted-foreground">Desenvolvedor FullStack</p>
@@ -95,17 +93,6 @@ export default function Header() {
               </Link>
             ))}
           </nav>
-
-          {/* Botão de tema fixado à direita */}
-          <div className="absolute right-0">
-            <button
-              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-              aria-label="Alternar tema"
-              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-            >
-              {resolvedTheme === "dark" ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
-          </div>
         </div>
       </header>
 
@@ -113,7 +100,7 @@ export default function Header() {
       <div className="hidden md:block h-16" />
 
       {/* Header mobile */}
-      <header className="bg-white shadow-md fixed top-0 left-0 w-full flex z-50 md:hidden max-w-7xl mx-auto items-center justify-between px-4 py-4 dark:bg-black">
+      <header className="bg-background shadow-md fixed top-0 left-0 w-full flex z-50 md:hidden max-w-7xl mx-auto items-center justify-between px-4 py-4 dark:bg-background">
         <div className="flex items-center gap-3 text-black dark:text-white">
           <Avatar className="min-w-11 min-h-11 w-auto">
             <AvatarImage src="https://avatars.githubusercontent.com/u/196721561?v=4" />
@@ -126,14 +113,6 @@ export default function Header() {
             <p className="text-xs text-normal text-muted-foreground">Desenvolvedor FullStack</p>
           </div>
         </div>
-
-        <button
-          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-          aria-label="Alternar tema"
-          className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-        >
-          {resolvedTheme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
       </header>
 
       {/* Menu inferior mobile */}

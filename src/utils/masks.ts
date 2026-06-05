@@ -1,3 +1,12 @@
+export const formatCurrency = (value: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+
+export const formatDate = (iso?: string) => (iso ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(iso)) : "—");
+
+
+export const maskPhone = (raw: string) => {
+  const digits = raw.replace(/\D/g, "").slice(0, 11);
+  return digits.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
+};
 export const formatarWhatsapp = (value: string) => {
   const limpo = value.replace(/\D/g, "");
   if (limpo.length <= 2) return limpo;

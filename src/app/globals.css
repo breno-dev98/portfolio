@@ -7,11 +7,25 @@ html {
   transition: background-color 0.2s ease;
 }
 
+@layer base {
+  @font-face {
+    font-family: "Space Grotesk";
+    src: url("https://fonts.gstatic.com/s/spacegrotesk/v16/V8mDoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7aUUw.woff2") format("woff2");
+    font-weight: 300 700;
+    font-display: swap;
+  }
+}
+
 @theme inline {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -20,6 +34,7 @@ html {
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-glow: var(--primary-glow);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -27,14 +42,14 @@ html {
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -46,104 +61,74 @@ html {
 }
 
 :root {
-  --radius: 0.65rem;
+  /* Midnight Indigo — Paleta Única e Padrão do Sistema */
+  --radius: 0.75rem;
+  --background: oklch(0.12 0.04 275);
+  --foreground: oklch(0.97 0.01 270);
 
-  /* MODO CLARO - Tons baseados na paleta, adaptados para alto contraste */
-  --background: oklch(0.98 0.01 240);          /* Branco gelo levemente azulado */
-  --foreground: oklch(0.15 0.02 240);          /* Azul escuro quase preto para textos */
+  --card: oklch(0.16 0.045 275);
+  --card-foreground: oklch(0.97 0.01 270);
 
-  --card: oklch(1 0 0);                        /* Branco puro para os cards */
-  --card-foreground: oklch(0.15 0.02 240);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 240);
+  --popover: oklch(0.16 0.045 275);
+  --popover-foreground: oklch(0.97 0.01 270);
 
-  /* Azul Royal de alto contraste (Baseado no azul da foto) */
-  --primary: oklch(0.55 0.22 250);            
-  --primary-foreground: oklch(0.99 0.01 240);
+  --primary: oklch(0.58 0.22 275);
+  --primary-foreground: oklch(0.98 0.005 270);
+  --primary-glow: oklch(0.72 0.2 280);
 
-  /* Roxo/Magenta corporativo de alto contraste */
-  --secondary: oklch(0.50 0.24 310);          
-  --secondary-foreground: oklch(0.99 0.01 240);
+  --secondary: oklch(0.22 0.06 275);
+  --secondary-foreground: oklch(0.97 0.01 270);
 
-  --muted: oklch(0.92 0.01 240);
-  --muted-foreground: oklch(0.45 0.02 240);
+  --muted: oklch(0.2 0.04 275);
+  --muted-foreground: oklch(0.7 0.03 270);
 
-  --accent: oklch(0.94 0.03 250);
-  --accent-foreground: oklch(0.55 0.22 250);
+  --accent: oklch(0.32 0.12 275);
+  --accent-foreground: oklch(0.98 0.005 270);
 
-  --destructive: oklch(0.60 0.25 25);
-  --border: oklch(0.88 0.02 240);
-  --input: oklch(0.88 0.02 240);
-  --ring: oklch(0.55 0.22 250);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.98 0.005 270);
 
-  /* Cores de Gráficos/Extras baseadas nos subtons da foto */
-  --chart-1: oklch(0.55 0.22 250);            /* Azul */
-  --chart-2: oklch(0.50 0.24 310);            /* Roxo */
-  --chart-3: oklch(0.60 0.22 340);            /* Rosa/Magenta */
-  --chart-4: oklch(0.40 0.18 270);            /* Indigo */
-  --chart-5: oklch(0.70 0.15 200);            /* Ciano */
+  --success: oklch(0.7 0.17 160);
+  --success-foreground: oklch(0.12 0.04 275);
 
-  --sidebar: oklch(0.96 0.01 240);
-  --sidebar-foreground: oklch(0.15 0.02 240);
-  --sidebar-primary: oklch(0.55 0.22 250);
-  --sidebar-primary-foreground: oklch(0.99 0.01 240);
-  --sidebar-accent: oklch(0.92 0.02 240);
-  --sidebar-accent-foreground: oklch(0.55 0.22 250);
-  --sidebar-border: oklch(0.88 0.02 240);
-  --sidebar-ring: oklch(0.55 0.22 250);
-}
+  --warning: oklch(0.78 0.16 80);
+  --warning-foreground: oklch(0.12 0.04 275);
 
-.dark {
-  /* MODO ESCURO - Fiel à estética Neon/Cyberpunk da foto */
-  --background: oklch(0.08 0.02 250);          /* Fundo preto azulado profundo */
-  --foreground: oklch(0.98 0.01 240);          /* Texto quase branco */
+  --border: oklch(0.25 0.05 275);
+  --input: oklch(0.22 0.05 275);
+  --ring: oklch(0.58 0.22 275);
 
-  --card: oklch(0.12 0.03 250);                /* Cards levemente mais claros que o fundo */
-  --card-foreground: oklch(0.98 0.01 240);
-  --popover: oklch(0.12 0.03 250);
-  --popover-foreground: oklch(0.98 0.01 240);
+  /* Efeitos de Degradê e Sombras Avançados */
+  --gradient-primary: linear-gradient(135deg, oklch(0.45 0.22 275), oklch(0.65 0.22 290));
+  --gradient-hero: radial-gradient(ellipse at top, oklch(0.32 0.18 275 / 0.6), transparent 60%);
+  --gradient-card: linear-gradient(160deg, oklch(0.18 0.05 275), oklch(0.14 0.04 275));
 
-  /* Azul Neon idêntico ao lado esquerdo da casa na imagem */
-  --primary: oklch(0.65 0.26 250);            
-  --primary-foreground: oklch(0.08 0.02 250);  /* Texto escuro dentro do botão neon */
+  --shadow-glow: 0 0 40px oklch(0.58 0.22 275 / 0.35);
+  --shadow-elegant: 0 20px 60px -20px oklch(0.05 0.04 275 / 0.6);
 
-  /* Roxo/Pink Neon idêntico ao lado direito da casa e texto "CASA DIGITAL" */
-  --secondary: oklch(0.60 0.28 320);          
-  --secondary-foreground: oklch(0.98 0.01 240);
-
-  --muted: oklch(0.16 0.03 250);
-  --muted-foreground: oklch(0.65 0.05 250);
-
-  --accent: oklch(0.18 0.04 250);
-  --accent-foreground: oklch(0.65 0.26 250);
-
-  --destructive: oklch(0.55 0.22 25);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.65 0.26 250);
-
-  /* Gráficos em Modo Dark */
-  --chart-1: oklch(0.65 0.26 250);            /* Azul Neon */
-  --chart-2: oklch(0.60 0.28 320);            /* Roxo/Pink Neon */
-  --chart-3: oklch(0.70 0.25 350);            /* Magenta Vivo */
-  --chart-4: oklch(0.55 0.20 280);            /* Roxo Profundo */
-  --chart-5: oklch(0.75 0.18 190);            /* Ciano Neon */
-
-  --sidebar: oklch(0.10 0.03 250);
-  --sidebar-foreground: oklch(0.98 0.01 240);
-  --sidebar-primary: oklch(0.65 0.26 250);
-  --sidebar-primary-foreground: oklch(0.08 0.02 250);
-  --sidebar-accent: oklch(0.16 0.03 250);
-  --sidebar-accent-foreground: oklch(0.98 0.01 240);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.65 0.26 250);
+  /* Painel de Controle (Sidebar) */
+  --sidebar: oklch(0.1 0.035 275);
+  --sidebar-foreground: oklch(0.92 0.01 270);
+  --sidebar-primary: oklch(0.58 0.22 275);
+  --sidebar-primary-foreground: oklch(0.98 0.005 270);
+  --sidebar-accent: oklch(0.18 0.05 275);
+  --sidebar-accent-foreground: oklch(0.97 0.01 270);
+  --sidebar-border: oklch(0.22 0.05 275);
+  --sidebar-ring: oklch(0.58 0.22 275);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--color-border);
   }
-  body {
-    @apply bg-background text-foreground;
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  
 }

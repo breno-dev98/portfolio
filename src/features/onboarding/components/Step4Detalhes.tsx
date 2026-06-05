@@ -3,29 +3,45 @@
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { OrcamentoData } from "../OnboardingWizard";
+import { useWizard } from "../context/WizardContext";
 
-interface StepProps {
-  data: OrcamentoData;
-  updateData: (fields: Partial<OrcamentoData>) => void;
-}
+export function Step4Detalhes() {
+  const { data, update } = useWizard();
 
-export function Step4Detalhes({ data, updateData }: StepProps) {
   return (
-    <div className="space-y-4 max-w-xl mx-auto w-full">
-
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-display text-2xl font-semibold">Conte mais sobre o projeto</h2>
+        <p className="text-sm text-muted-foreground mt-1">Quanto mais contexto, melhor a proposta.</p>
+      </div>
       <div className="space-y-2">
-        <Label htmlFor="descricao">Descrição do Projeto (Opcional):</Label>
+        <Label htmlFor="description">Descrição resumida</Label>
         <Textarea
-          id="descricao"
-          rows={6}
-          maxLength={1500}
-          placeholder="Ex: Gostaria de criar um MVP para validar um sistema de agendamento de barbearias na minha região. Minha principal referência visual é o site X..."
-          value={data.descricao}
-          onChange={(e) => updateData({ descricao: e.target.value })}
-          className="h-40 focus-visible:ring-zinc-300 resize-none"
+          id="description"
+          rows={3}
+          value={data.project.description || ""}
+          onChange={(e) => update({ project: { description: e.target.value } })}
+          placeholder="Em poucas linhas, o que o projeto resolve?"
+          required
         />
-        <div className="text-right text-xs text-muted-foreground">{data.descricao.length} / 1500 caracteres</div>
+      </div>
+      <div className="space-y-2">
+        <Label>Detalhes, escopo e objetivos</Label>
+        <Textarea
+          rows={5}
+          value={data.project.details || ""}
+          onChange={(e) => update({ project: { details: e.target.value } })}
+          placeholder="Páginas, integrações, público-alvo, métricas de sucesso..."
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Referências (sites, links)</Label>
+        <Textarea
+          rows={3}
+          value={data.project.references || ""}
+          onChange={(e) => update({ project: { references: e.target.value } })}
+          placeholder="Cole URLs de referência, uma por linha"
+        />
       </div>
     </div>
   );

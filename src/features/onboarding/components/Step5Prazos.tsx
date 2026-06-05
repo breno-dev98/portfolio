@@ -3,21 +3,18 @@
 import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { OrcamentoData } from "../OnboardingWizard";
+import { useWizard } from "../context/WizardContext";
 
-interface StepProps {
-  data: OrcamentoData;
-  updateData: (fields: Partial<OrcamentoData>) => void;
-}
-
-export function Step5Prazos({ data, updateData }: StepProps) {
+export function Step5Prazos() {
+  const { data, update } = useWizard();
   return (
-    <div className="space-y-6 max-w-md mx-auto w-full">
-
-      <div className="space-y-2">
-        <Label className="text-xs md:text-base" htmlFor="prazo">Para quando você precisa do projeto?*</Label>
-        <Select value={data.prazoEstimado} onValueChange={(value) => updateData({ prazoEstimado: value })}>
-          <SelectTrigger id="prazo" className="focus:ring-zinc-300">
+    <div className="space-y-6 max-w-md mx-auto w-full p-0">
+      <div className="space-y-1.5">
+        <Label className="text-xs sm:text-base" htmlFor="prazo">
+          Para quando você precisa do projeto?*
+        </Label>
+        <Select value={data.project.deliveryEstimate} onValueChange={(value) => update({ project: { deliveryEstimate: value } })}>
+          <SelectTrigger id="prazo" className="focus:ring-zinc-300 h-10 text-sm">
             <SelectValue placeholder="Selecione o prazo ideal" />
           </SelectTrigger>
           <SelectContent>
@@ -29,9 +26,11 @@ export function Step5Prazos({ data, updateData }: StepProps) {
         </Select>
       </div>
 
-      <div className="space-y-2">
-        <Label className="text-xs md:text-base" htmlFor="orcamento">Qual a sua estimativa de orçamento disponível?*</Label>
-        <Select value={data.orcamentoEstimado} onValueChange={(value) => updateData({ orcamentoEstimado: value })}>
+      <div className="space-y-1.5">
+        <Label className="text-xs md:text-base" htmlFor="orcamento">
+          Qual a sua estimativa de orçamento disponível?*
+        </Label>
+        <Select value={data.project.budgetEstimate} onValueChange={(value) => update({ project: { budgetEstimate: value } })}>
           <SelectTrigger id="orcamento" className="focus:ring-zinc-300">
             <SelectValue placeholder="Selecione a faixa de investimento" />
           </SelectTrigger>
