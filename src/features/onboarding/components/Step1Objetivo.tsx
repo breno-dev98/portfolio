@@ -6,8 +6,7 @@ import { Layout, ShoppingBag, Laptop, Code } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useWizard } from "../context/WizardContext";
-import { ProjectType } from "@/features/projetos/types";
-
+import { ProjectType } from "@/features/projects/types";
 
 export function Step1Objetivo() {
   const { data, update } = useWizard();
@@ -20,7 +19,6 @@ export function Step1Objetivo() {
 
   return (
     <div className="space-y-5 max-w-xl mx-auto w-full text-left py-0">
-
       {/* Input de Nome do Projeto */}
       <div className="space-y-1.5 px-1">
         <Label htmlFor="tituloProjeto" className="text-xs sm:text-sm font-semibold text-foreground">
@@ -34,7 +32,7 @@ export function Step1Objetivo() {
           className="focus-visible:ring-zinc-300 h-10 text-sm"
         />
       </div>
-      
+
       {/* Grid de Escolha de Categoria */}
       <div className="space-y-2">
         <Label className="text-xs sm:text-sm font-semibold text-foreground px-1">Selecione o modelo do projeto:*</Label>
@@ -63,8 +61,6 @@ export function Step1Objetivo() {
           })}
         </div>
       </div>
-
-      
     </div>
   );
 }

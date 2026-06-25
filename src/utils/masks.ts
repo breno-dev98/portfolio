@@ -1,6 +1,6 @@
 export const formatCurrency = (value: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
-export const formatDate = (iso?: string) => (iso ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(iso)) : "—");
+export const formatDate = (iso?: string | Date) => (iso ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(iso)) : "—");
 
 
 export const maskPhone = (raw: string) => {

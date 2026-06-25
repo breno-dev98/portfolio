@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useMemo, useState } from "react";
-import type { Project, Customer, Address, ProjectType } from "../../projetos/types";
+import type { Project, Customer, Address, ProjectType } from "../../projects/types";
 
 export type WizardProjectData = Omit<
   Pick<Project, "projectType" | "title" | "features" | "budgetEstimate" | "deliveryEstimate" | "description" | "details" | "references">,
@@ -23,7 +23,6 @@ export interface WizardDataUpdatePatch {
   customer?: Partial<WizardCustomerData>;
   address?: Partial<WizardAddressData>;
 }
-
 
 const initial: WizardData = {
   project: {

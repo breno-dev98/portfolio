@@ -1,6 +1,6 @@
 import React from "react";
 import { getSession } from "@/features/auth/actions";
-import { getProjectsByUserId } from "@/features/projetos/queries";
+import { getProjectsByUserId } from "@/features/projects/queries";
 import { redirect } from "next/navigation";
 import { FolderKanban, Stars, TrendingUp } from "lucide-react";
 import { StatsPainel } from "@/features/painel/components/StatsPainel";

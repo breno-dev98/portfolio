@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getProjectsByUserId } from "@/features/projetos/queries";
-import { ProjectList } from "@/features/projetos/components/ProjectList";
+import { getProjectsByUserId } from "@/features/projects/queries";
+import { ProjectList } from "@/features/projects/components/ProjectList";
 
 export default async function ProjectsPage() {
   const session = await auth.api.getSession({
@@ -14,6 +14,10 @@ export default async function ProjectsPage() {
   }
 
   const projects = await getProjectsByUserId(session.user.id);
+
+  if (projects.length < 1) {
+    redirect("/onboarding")
+  }
 
   return (
     <div className="p-6 space-y-6">

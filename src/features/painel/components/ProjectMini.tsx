@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { PROJECT_TYPES, Project } from "@/features/projetos/types";
+import { PROJECT_TYPES, Project } from "@/features/projects/types";
 import { formatDate } from "@/utils/masks";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import Link from "next/link";
 export function ProjectMini({ project }: { project: Project }) {
   const type = PROJECT_TYPES.find((t) => t.value === project.projectType);
   return (
-    <Link href={`/painel/projetos/${project.id}`}>
+    <Link href={`/painel/projetos/${project.slug}`}>
       <Card className="p-5 bg-[image:var(--gradient-card)] border-border hover:border-primary/60 transition-colors group">
         <div className="flex items-start justify-between gap-3">
           <div>

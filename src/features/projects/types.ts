@@ -8,7 +8,7 @@ import {
 } from "@/generated/prisma/client";
 
 export type ProjectType = "landing" | "institucional" | "ecommerce" | "sistema";
-export type ProjectStatus = "briefing" | "proposta" | "aprovado" | "desenvolvimento" | "entregue" | "em_andamento" | "concluido";
+export type ProjectStatus = "briefing" | "proposal_sent" | "proposal_rejected" | "contract_signed" | "in_development" | "completed";
 
 export interface AppUser extends PrismaUser {}
 
@@ -21,6 +21,7 @@ export interface Customer extends PrismaCustomer {
 export interface Project extends Omit<PrismaProject, "projectType" | "status"> {
   projectType: ProjectType;
   status: ProjectStatus;
+  customer?: Customer | null;
   checklists?: ChecklistItem[];
   documents?: DocumentItem[];
 }

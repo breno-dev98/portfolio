@@ -2,7 +2,7 @@ import React from "react";
 import { OnboardingWizard } from "@/features/onboarding/OnboardingWizard";
 import { getSession } from "@/features/auth/actions";
 import { redirect } from "next/navigation";
-import { getProjectsByUserId } from "@/features/projetos/queries";
+import { getProjectsByUserId } from "@/features/projects/queries";
 
 export default async function OnboardingPage() {
   const session = await getSession();
