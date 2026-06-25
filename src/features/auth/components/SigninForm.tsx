@@ -41,7 +41,6 @@ export function SignInForm() {
       const { data: signInData, error } = await authClient.signIn.email({
         email: data.email,
         password: data.senha,
-        callbackURL: "/onboarding",
       });
 
       if (error) {
@@ -60,10 +59,15 @@ export function SignInForm() {
       }
 
       toast.success("Login realizado com sucesso!", {
-        description: "Redirecionando você para o painel de orçamentos...",
+        description: "Redirecionando você para o painel...",
       });
 
-      router.push("/onboarding");
+      const userRole = signInData?.user?.role;
+      if (userRole === "admin") {
+        router.replace("/painel-dev");
+      } else {
+        router.replace("/painel");
+      }
     } catch (err) {
       toast.error("Erro crítico", {
         description: "Falha ao conectar com o serviço de autenticação.",

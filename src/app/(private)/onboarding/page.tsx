@@ -11,6 +11,10 @@ export default async function OnboardingPage() {
     redirect("/signin");
   }
 
+  if (session.user.role === "admin") {
+    redirect("/painel-dev");
+  }
+
   const projetoExistente = await getProjectsByUserId(session.user.id);
 
   if (projetoExistente && projetoExistente.length > 0) {

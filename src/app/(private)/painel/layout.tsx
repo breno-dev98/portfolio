@@ -19,6 +19,10 @@ export default async function PainelLayout({ children }: PainelLayoutProps) {
     redirect("/signin");
   }
 
+  if (session.user.role === "admin") {
+    redirect("/painel-dev");
+  }
+
   return (
     <DashboardShell session={session} navigationLinks={clientLinks} panelTitle="Painel do cliente">
       {children}

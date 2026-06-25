@@ -3,13 +3,19 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
   const sessionToken = request.cookies.get("better-auth.session_token")?.value;
 
-  if (!sessionToken && pathname.startsWith("/painel")) {
+  const isAuthPage = pathname.startsWith("/signin") || pathname.startsWith("/signup");
+  const isDevPage = pathname.startsWith("/painel-dev");
+  const isClientPage = pathname.startsWith("/painel");
+
+  if (!sessionToken && (isClientPage || isDevPage)) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
 
-  if(sessionToken && (pathname.startsWith("/signin") || pathname.startsWith("/signup"))) {
+
+  if (sessionToken && isAuthPage) {
     return NextResponse.redirect(new URL("/painel", request.url));
   }
 
@@ -23,6 +29,7 @@ export function middleware(request: NextRequest) {
   });
 }
 
+// O matcher foca apenas nas páginas relevantes, ignorando assets e ficheiros estáticos
 export const config = {
-  matcher: ["/painel/:path*", "/signin", "/signup", "/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: ["/painel/:path*", "/painel-dev/:path*", "/signin", "/signup"],
 };
