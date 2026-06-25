@@ -3,9 +3,9 @@ import { getSession } from "@/features/auth/actions";
 import { getProjectsByUserId } from "@/features/projects/queries";
 import { redirect } from "next/navigation";
 import { FolderKanban, Stars, TrendingUp } from "lucide-react";
-import { StatsPainel } from "@/features/painel/components/StatsPainel";
-import { EmptyState } from "@/features/painel/components/EmptyState";
-import { ProjectMini } from "@/features/painel/components/ProjectMini";
+import { StatsPainel } from "@/features/projects/components/StatsPainel";
+import { EmptyState } from "@/features/projects/components/EmptyState";
+import { ProjectMini } from "@/features/projects/components/ProjectMini";
 import { BudGetButton } from "@/components/shared/BudGetButton";
 
 export default async function PainelPage() {
@@ -19,8 +19,8 @@ export default async function PainelPage() {
 
   const statsItems = [
     { label: "Total de projetos", value: projects.length, icon: FolderKanban },
-    { label: "Em andamento", value: projects.filter((p) => p.status === "em_andamento").length, icon: Stars },
-    { label: "Entregues", value: projects.filter((p) => p.status === "concluido").length, icon: TrendingUp },
+    { label: "Em andamento", value: projects.filter((p) => p.status === "in_development").length, icon: Stars },
+    { label: "Entregues", value: projects.filter((p) => p.status === "completed").length, icon: TrendingUp },
   ];
 
   if (!projects || projects.length === 0) {

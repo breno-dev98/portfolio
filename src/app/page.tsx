@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import HeroSection from "../components/sections/HeroSection";
-import SobreSection from "../components/sections/SobreSection";
-import ProjetosSection from "@/components/sections/ProjetosSection";
+import HeroSection from "../components/landing-page/HeroSection";
+import SobreSection from "../components/landing-page/SobreSection";
+import ProjetosSection from "@/components/landing-page/ProjetosSection";
 import ContatoSection from "../features/contato/ContatoSection";
-import Header from "@/components/Header";
+import Header from "@/components/landing-page/Header";
 
 export const metadata: Metadata = {
   title: "Início - Breno Dev",
